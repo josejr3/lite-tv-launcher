@@ -189,8 +189,23 @@ class MainActivity : Activity() {
         apps = Apps.sort(apps, prefs.order)
     }
 
+        private fun abrirEntradas() {
+        try {
+            startActivity(Intent().apply {
+                setClassName("com.hikeen.menu", "com.hikeen.menu.input.SelectInputActivity")
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+            })
+        } catch (e: Exception) {
+            Toast.makeText(this, R.string.cannot_open, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     // While moving, D-pad shifts the tile instead of the focus.
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode == KeyEvent.KEYCODE_TV_INPUT || event.keyCode == KeyEvent.KEYCODE_PROG_RED) {
+            if (event.action == KeyEvent.ACTION_UP) abrirEntradas()
+            return true
+        }
         val app = moving ?: return super.dispatchKeyEvent(event)
         if (event.action != KeyEvent.ACTION_DOWN) return true
         val from = visible.indexOf(app)
